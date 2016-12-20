@@ -1,0 +1,16 @@
+{
+    "$schema": "http://json-schema.org/schema#",
+    "additionalProperties": false,
+    "properties": {
+        "institution_id": {
+            "maxLength": 63,
+            "minLength": 1,
+            "type": "string"
+        }
+    },
+    "required": [
+        "institution_id"
+    ],
+    "title": "ES-DOC CDF2CIM web-service JSON schema: endpoint = /1/create",
+    "type": "object"
+}

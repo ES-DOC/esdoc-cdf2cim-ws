@@ -35,7 +35,7 @@ def _get_config_fpath():
             return fpath
         dpath = os.path.dirname(dpath)
 
-    err = "ESDOC-ERRATA configuration file ({0}) could not be found".format(_CONFIG_FPATH)
+    err = "ESDOC-CDF2CIM-WS configuration file ({0}) could not be found".format(_CONFIG_FPATH)
     raise RuntimeError(err)
 
 

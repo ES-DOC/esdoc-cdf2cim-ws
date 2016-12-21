@@ -11,7 +11,7 @@
 
 """
 # ESDOC GitHub team: cdf2cim-publication.
-ERRATA_GH_TEAM = 'cdf2cim-publication'
+CDF2CIM_PUBLICATION_GH_TEAM = 'cdf2cim-publication'
 
 # Default endpoint.
 DEFAULT_ENDPOINT = r'/1/ops/heartbeat'

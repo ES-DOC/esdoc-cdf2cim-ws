@@ -26,7 +26,7 @@ _SECURED_ENDPOINTS = {
 }
 
 # GitHub API - user within GitHub.
-_GH_API_USER = "https://api.github.com/user?access_token={}"
+_GH_API_USER = "https://api.github.com/user"
 
 # GitHub API - ES-DOC-OPS team membership endpoint.
 _GH_API_TEAMS = "https://api.github.com/orgs/ES-DOC-OPS/teams?per_page=100"
@@ -39,48 +39,51 @@ def _authenticate(gh_login, oauth_token):
     """Authenticate request against github oauth teams api.
 
     """
-    # Authenticate against GitHub user API.
-    r = requests.get(
-        _GH_API_USER.format(oauth_token),
-        headers={'Accept': 'application/json'}
+    # Set credentials to be used to authenticate user.
+    credentials = (gh_login, oauth_token)
+
+    # Delegate authentication to GitHub user API.
+    r = requests.get(_GH_API_USER,
+        headers={'Accept': 'application/json'},
+        auth=credentials
         )
     if r.status_code != 200:
         raise exceptions.AuthenticationError()
 
-    # Verify that GH login & token map to same GH account.
-    user = json.loads(r.text)
-    if gh_login != user['login']:
+    # Validate OAuth scope(s).
+    scopes = set(r.headers['X-OAuth-Scopes'].split(", "))
+    if _REQUIRED_OAUTH_SCOPES - scopes:
         raise exceptions.AuthenticationError()
 
+    # Decode user information.
+    user = json.loads(r.text)
+
+    print user
+
     # Return minimal user information.
-    return user['name'] or gh_login
+    return unicode(user['name'].strip()) or gh_login
 
 
-def _authorize(oauth_token, team):
+def _authorize(user_teams):
     """Authorizes access by confirming that a user is a member of appropriate team.
 
     """
-    # Authorize against GitHub organization team API.
-    r = requests.get(
-        _GH_API_TEAMS,
+    # Set credentials to be used to pull down set of teams.
+    credentials = (os.getenv('CDF2CIM_WS_GITHUB_USER'),
+                   os.getenv('CDF2CIM_WS_GITHUB_ACCESS_TOKEN'))
+
+    # Pull set of teams using GitHub organization team API.
+    r = requests.get(_GH_API_TEAMS,
         headers={'Accept': 'application/json'},
-        auth=(
-            os.getenv('CDF2CIM_WS_GITHUB_USER'),
-            os.getenv('CDF2CIM_WS_GITHUB_ACCESS_TOKEN')
-            )
+        auth=credentials
         )
     if r.status_code != 200:
         raise exceptions.AuthorizationError()
 
-    # Verify minimal OAuth scope(s).
-    scopes = set(r.headers['X-OAuth-Scopes'].split(", "))
-    if _REQUIRED_OAUTH_SCOPES - scopes:
-        raise exceptions.AuthorizationError()
-
-    # Verify team membership.
+    # Set supported teams.
     teams = set([i['name'] for i in json.loads(r.text)])
-    teams = [i for i in teams if i.startswith(team)]
-    if not teams:
+    teams = [i for i in teams if i.startswith(constants.CDF2CIM_PUBLICATION_GH_TEAM)]
+    if team not in teams:
         raise exceptions.AuthorizationError()
 
     # Return team membership.
@@ -99,14 +102,16 @@ def secure_request(handler):
     if not handler.request.path.split("?")[0] in _SECURED_ENDPOINTS:
         return
 
+    # Validate request header.
+    # TODO: push to standard header validation
+    if 'Authorization' not in handler.request.headers:
+        raise exceptions.AuthenticationError()
+
     # Extract user's GitHub OAuth personal access token from request.
     credentials = handler.request.headers['Authorization']
     credentials = credentials.replace('Basic ', '')
     credentials = base64.b64decode(credentials).split(':')
     gh_login, oauth_token = credentials
 
-    # Authenticate.
-    handler.user_name = _authenticate(gh_login, oauth_token)
-
-    # Authorize.
-    handler.user_teams = _authorize(oauth_token, constants.ERRATA_GH_TEAM)
+    # Authenticate the authorize.
+    _authorize(_authenticate(gh_login, oauth_token))

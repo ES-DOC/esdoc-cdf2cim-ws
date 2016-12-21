@@ -33,7 +33,7 @@ class CreateRequestHandler(tornado.web.RequestHandler):
             """
             # Super & insitutional users have access.
             for team in sorted(self.user_teams):
-                if team == constants.ERRATA_GH_TEAM:
+                if team == constants.CDF2CIM_PUBLICATION_GH_TEAM:
                     return
                 if team.split("-")[-1] == self.request.data[JF_INSTITUTION_ID].lower():
                     return

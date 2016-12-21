@@ -8,7 +8,8 @@
         "Content-Type": {
             "enum": [
                 "application/json",
-                "application/json; charset=UTF-8"
+                "application/json; charset=UTF-8",
+                "application/json; charset=utf-8"
             ],
             "type": "string"
         }
@@ -17,6 +18,6 @@
         "Authorization",
         "Content-Type"
     ],
-    "title": "ES-DOC CDF2CIM web-service JSON schema: endpoint = /1/create",
+    "title": "ES-DOC CDF2CIM web-service JSON schema: endpoint = /1/create/cmip6",
     "type": "object"
 }

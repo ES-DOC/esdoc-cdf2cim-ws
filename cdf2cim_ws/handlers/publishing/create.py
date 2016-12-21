@@ -12,9 +12,6 @@
 """
 import tornado
 
-from cdf2cim_ws.utils import constants
-from cdf2cim_ws.utils.constants_json import JF_INSTITUTION_ID
-from cdf2cim_ws.utils import exceptions
 from cdf2cim_ws.utils.http import process_request
 
 
@@ -27,22 +24,16 @@ class CreateRequestHandler(tornado.web.RequestHandler):
         """HTTP POST handler.
 
         """
-        def _validate_user_access():
-            """Validates user's institutional access rights.
+        def _set_output():
+            """Sets response output.
 
             """
-            # Super & insitutional users have access.
-            for team in sorted(self.user_teams):
-                if team == constants.CDF2CIM_PUBLICATION_GH_TEAM:
-                    return
-                if team.split("-")[-1] == self.request.data[JF_INSTITUTION_ID].lower():
-                    return
-
-            # User has no access rights to this particular issue.
-            raise exceptions.AuthorizationError()
+            self.output = {
+                "message": "CDF2CIM-WS security check OK"
+            }
 
 
         # Process request.
         process_request(self, [
-            _validate_user_access,
+            _set_output,
             ])

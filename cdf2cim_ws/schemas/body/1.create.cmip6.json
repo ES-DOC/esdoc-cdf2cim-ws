@@ -6,11 +6,17 @@
             "maxLength": 63,
             "minLength": 1,
             "type": "string"
+        },
+        "mip_era": {
+            "enum": [
+                "cmip6"
+            ],
+            "type": "string"
         }
     },
     "required": [
         "institution_id"
     ],
-    "title": "ES-DOC CDF2CIM web-service JSON schema: endpoint = /1/create",
+    "title": "ES-DOC CDF2CIM web-service JSON schema: endpoint = /1/create/cmip6",
     "type": "object"
 }

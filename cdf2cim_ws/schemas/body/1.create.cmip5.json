@@ -1,0 +1,23 @@
+{
+    "$schema": "http://json-schema.org/schema#",
+    "additionalProperties": false,
+    "properties": {
+        "institution_id": {
+            "maxLength": 63,
+            "minLength": 1,
+            "type": "string"
+        },
+        "mip_era": {
+            "enum": [
+                "cmip5"
+            ],
+            "type": "string"
+        }
+    },
+    "required": [
+        "institution_id",
+        "mip_era"
+    ],
+    "title": "ES-DOC CDF2CIM web-service JSON schema: endpoint = /1/create/cmip6",
+    "type": "object"
+}

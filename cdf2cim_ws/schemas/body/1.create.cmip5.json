@@ -2,6 +2,28 @@
     "$schema": "http://json-schema.org/schema#",
     "additionalProperties": false,
     "properties": {
+        "branch_time_in_parent": {
+            "type": "number"
+        },
+        "calendar": {
+            "type": "string"
+        },
+        "contact": {
+            "type": "string"
+        },
+        "end_time": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "experiment_id": {
+            "type": "string"
+        },
+        "forcing": {
+            "type": "string"
+        },
+        "initialization_index": {
+            "type": "integer"
+        },
         "institution_id": {
             "maxLength": 63,
             "minLength": 1,
@@ -12,11 +34,59 @@
                 "cmip5"
             ],
             "type": "string"
+        },
+        "parent_experiment_id": {
+            "type": "string"
+        },
+        "parent_initialization_index": {
+            "type": "integer"
+        },
+        "parent_physics_index": {
+            "type": "integer"
+        },
+        "parent_realization_index": {
+            "type": "integer"
+        },
+        "physics_index": {
+            "type": "integer"
+        },
+        "realization_index": {
+            "type": "integer"
+        },
+        "references": {
+            "type": "string"
+        },
+        "source": {
+            "type": "null"
+        },
+        "source_id": {
+            "type": "string"
+        },
+        "start_time": {
+            "type": "string",
+            "format": "date-time"
         }
     },
     "required": [
+        "branch_time_in_parent",
+        "calendar",
+        "contact",
+        "end_time",
+        "experiment_id",
+        "forcing",
+        "initialization_index",
         "institution_id",
-        "mip_era"
+        "mip_era",
+        "parent_experiment_id",
+        "parent_initialization_index",
+        "parent_physics_index",
+        "parent_realization_index",
+        "physics_index",
+        "realization_index",
+        "references",
+        "source",
+        "source_id",
+        "start_time"
     ],
     "title": "ES-DOC CDF2CIM web-service JSON schema: endpoint = /1/create/cmip6",
     "type": "object"

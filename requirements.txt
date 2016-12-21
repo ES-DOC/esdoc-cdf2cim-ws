@@ -1,7 +1,8 @@
 arrow
-nose
-tornado
-pyesdoc
-requests
 github3.py
 jsonschema
+nose
+pyesdoc
+requests
+supervisor
+tornado

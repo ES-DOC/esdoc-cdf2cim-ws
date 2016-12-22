@@ -56,6 +56,15 @@ def _log_success(handler):
     _log(handler, "success --> {}".format(handler))
 
 
+def _log_begin(handler):
+    """Logs beginning of request processing.
+
+    """
+    msg = "[{}]: executing --> {}"
+    msg = msg.format(id(handler), handler)
+    logger.log_web(msg)
+
+
 def _write_null(handler, data):
     """Writes HTTP response null data.
 
@@ -189,6 +198,7 @@ def _invoke(handler, task, err=None):
     """Invokes a task.
 
     """
+    # TODO: use inspect to determine function signatures as TypeError may be masked.
     try:
         if err:
             task(handler, err)
@@ -209,14 +219,9 @@ def process_request(handler, tasks, error_tasks=None):
     :param list error_tasks: Collection of error processing tasks.
 
     """
-    # Log request.
-    msg = "[{0}]: executing --> {1}"
-    msg = msg.format(id(handler), handler)
-    logger.log_web(msg)
-
     # Extend tasksets.
     tasks = _get_tasks(
-        [secure_request, validate_request],
+        [_log_begin, secure_request, validate_request],
         tasks,
         [_log_success, _write_success]
         )
@@ -231,7 +236,7 @@ def process_request(handler, tasks, error_tasks=None):
     for task in tasks:
         try:
             _invoke(handler, task)
-        except Exception as err:
+        except BaseException as err:
             # ... error processing;
             try:
                 for task in error_tasks:

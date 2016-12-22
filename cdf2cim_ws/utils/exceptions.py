@@ -43,9 +43,9 @@ class SecurityError(WebServiceError):
 
         """
         super(SecurityError, self).__init__(
-            "SECURITY EXCEPTION :: {}".format(msg)
+            "SECURITY EXCEPTION :: {}".format(msg),
+            response_code
             )
-        self.response_code = response_code
 
 
 class AuthenticationError(SecurityError):
@@ -74,7 +74,7 @@ class AuthorizationError(SecurityError):
             )
 
 
-class RequestValidationException(WebServiceError):
+class RequestValidationException(SecurityError):
     """Base class for request validation exceptions.
 
     """
@@ -83,7 +83,8 @@ class RequestValidationException(WebServiceError):
 
         """
         super(RequestValidationException, self).__init__(
-            "VALIDATION EXCEPTION :: {}".format(msg), _HTTP_RESPONSE_INVALID_REQUEST_ERROR
+            "REQUEST VALIDATION FAILED :: {}".format(msg),
+            _HTTP_RESPONSE_INVALID_REQUEST_ERROR
             )
 
 

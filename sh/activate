@@ -1,0 +1,45 @@
+# ###############################################################
+# STANDARD-SECTION: SETUP
+# ###############################################################
+
+# Set home path
+export CDF2CIM_WS_HOME="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+export CDF2CIM_WS_HOME="$( cd "$( dirname "${CDF2CIM_WS_HOME[0]}" )" && pwd )"
+
+# Set pip
+export CDF2CIM_WS_PIP=pip
+
+# ###############################################################
+# STANDARD-SECTION: OPERATIONS
+# ###############################################################
+
+# Ensure shell scripts are executable.
+chmod a+x $CDF2CIM_WS_HOME/sh/*.sh
+
+# Ensure ops directories exist
+mkdir -p $CDF2CIM_WS_HOME/ops
+mkdir -p $CDF2CIM_WS_HOME/ops/config
+mkdir -p $CDF2CIM_WS_HOME/ops/daemon
+mkdir -p $CDF2CIM_WS_HOME/ops/libs
+mkdir -p $CDF2CIM_WS_HOME/ops/logs
+
+# ###############################################################
+# STANDARD-SECTION: ALIASES
+# ###############################################################
+
+# Install / update.
+alias cdf2cim-ws-install=$CDF2CIM_WS_HOME/sh/install.sh
+alias cdf2cim-ws-update=$CDF2CIM_WS_HOME/sh/update.sh
+
+# Logs commands.
+alias cdf2cim-ws-reset-logs=$CDF2CIM_WS_HOME/sh/reset_logs.sh
+
+# Web-service commands.
+alias cdf2cim-ws=$CDF2CIM_WS_HOME/sh/app_run.sh
+alias cdf2cim-ws-daemon=$CDF2CIM_WS_HOME/sh/daemon_start.sh
+alias cdf2cim-ws-daemon-stop=$CDF2CIM_WS_HOME/sh/daemon_stop.sh
+alias cdf2cim-ws-daemon-reload='cdf2cim-ws-daemon-stop && cdf2cim-ws-daemon-start'
+alias cdf2cim-ws-daemon-status=$CDF2CIM_WS_HOME/sh/daemon_status.sh
+
+# Test related commands.
+alias cdf2cim-ws-tests=$CDF2CIM_WS_HOME/sh/run_tests.sh

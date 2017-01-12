@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 
 """
-.. module:: run_web_service.py
+.. module:: app_run.py
    :license: GPL/CeCIL
    :platform: Unix, Windows
-   :synopsis: Runs cdf2cim web-service.
+   :synopsis: Runs the web-service.
 
-.. moduleauthor:: Mark A. Greenslade <momipsl@ipsl.jussieu.fr>
+.. moduleauthor:: Mark A. Greenslade
 
 """
 import sys
-import cdf2cim_ws
+import cdf2cim_ws as APP
+
 
 
 def _main():
@@ -19,18 +20,24 @@ def _main():
     """
     # Run web service.
     try:
-        cdf2cim_ws.run()
+        APP.run()
 
     # Handle unexpected exceptions.
     except Exception as err:
-        # Simple log to stdout.
-        print err
-
         # Ensure that web-service is stopped.
         try:
-            cdf2cim_ws.stop()
+            APP.stop()
         except:
             pass
+
+        # Ensure that all active db transactions are cancelled.
+        try:
+            APP.db.session.rollback()
+        except:
+            pass
+
+        # Simple log to stdout.
+        print err
 
     # Signal exit.
     finally:

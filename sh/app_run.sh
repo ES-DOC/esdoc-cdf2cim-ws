@@ -6,12 +6,10 @@ source $CDF2CIM_WS_HOME/sh/utils.sh
 # Main entry point.
 main()
 {
-    log "TESTS : running ..."
+    log "running ..."
 
     source $CDF2CIM_WS_HOME/sh/activate_venv.sh
-    nosetests -v -s $CDF2CIM_WS_HOME/tests
-
-    log "TESTS : complete ..."
+	python $CDF2CIM_WS_HOME/sh/app_run.py
 }
 
 # Invoke entry point.

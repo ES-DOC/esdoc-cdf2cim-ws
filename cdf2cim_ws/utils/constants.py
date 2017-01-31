@@ -19,9 +19,6 @@ PROJECT_CMIP5 = u"cmip5"
 # Project - cmip6.
 PROJECT_CMIP6 = u"cmip6"
 
-# Project - test.
-PROJECT_TEST = u"test"
-
 # Project - all.
 PROJECT = [
 	{
@@ -31,10 +28,6 @@ PROJECT = [
 	{
 	    'key': PROJECT_CMIP6,
 	    'label': u"CMIP6"
-	},
-	{
-	    'key': PROJECT_TEST,
-	    'label': u"TEST"
 	}
 ]
 

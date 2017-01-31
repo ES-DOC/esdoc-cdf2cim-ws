@@ -9,7 +9,8 @@
         },
         "mip_era": {
             "enum": [
-                "cmip6"
+                "cmip6",
+                "CMIP6"
             ],
             "type": "string"
         }

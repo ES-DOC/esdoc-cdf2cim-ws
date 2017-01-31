@@ -14,6 +14,7 @@ import os
 
 import requests
 
+from cdf2cim_ws.utils import config
 from cdf2cim_ws.utils import exceptions
 
 
@@ -74,5 +75,8 @@ def secure_request(handler):
     :raises: exceptions.AuthenticationError, exceptions.AuthorizationError
 
     """
-    if handler.request.path.split("?")[0] != "/":
-        _authorize(_authenticate(handler.request.headers['Authorization']))
+    if handler.request.path.split("?")[0] == "/" or \
+       config.network_state == "down":
+        return
+
+    _authorize(_authenticate(handler.request.headers['Authorization']))

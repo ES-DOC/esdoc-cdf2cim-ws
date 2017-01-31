@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 """
-.. module:: handlers.create.py
+.. module:: handlers.cmip6_simulation.py.py
    :license: GPL/CeCIL
    :platform: Unix
-   :synopsis: ES-DOC CDF2CIM - create issue endpoint.
+   :synopsis: ES-DOC CDF2CIM - CMIP6 simulation publication handler.
 
 .. module author:: Mark A. Greenslade <momipsl@ipsl.jussieu.fr>
 
@@ -16,8 +16,8 @@ from cdf2cim_ws.utils.http import process_request
 
 
 
-class CreateRequestHandler(tornado.web.RequestHandler):
-    """Create CDF2CIM entry request handler.
+class CMIP6SimulationRequestHandler(tornado.web.RequestHandler):
+    """CMIP5 simulation publication request handler.
 
     """
     def post(self):
@@ -29,7 +29,7 @@ class CreateRequestHandler(tornado.web.RequestHandler):
 
             """
             self.output = {
-                "message": "CDF2CIM-WS security check OK"
+                "message": "CDF2CIM-WS: TODO CMIP6 cdf2cim"
             }
 
 

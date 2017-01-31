@@ -1,2 +1,3 @@
-from cdf2cim_ws.handlers import ops
-from cdf2cim_ws.handlers import publishing
+from cdf2cim_ws.handlers.cmip5_simulation import CMIP5SimulationRequestHandler
+from cdf2cim_ws.handlers.cmip6_simulation import CMIP6SimulationRequestHandler
+from cdf2cim_ws.handlers.heartbeat import HeartbeatRequestHandler

@@ -26,9 +26,9 @@ def _get_app_endpoints():
 
     """
     return {
-        (r'/', handlers.ops.HeartbeatRequestHandler),
-        (r'/1/create/cmip5', handlers.publishing.CreateRequestHandler),
-        (r'/1/create/cmip6', handlers.publishing.CreateRequestHandler),
+        (r'/', handlers.HeartbeatRequestHandler),
+        (r'/1/cmip5', handlers.CMIP5SimulationRequestHandler),
+        (r'/1/cmip6', handlers.CMIP6SimulationRequestHandler)
     }
 
 

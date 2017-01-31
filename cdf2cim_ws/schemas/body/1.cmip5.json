@@ -31,7 +31,8 @@
         },
         "mip_era": {
             "enum": [
-                "cmip5"
+                "cmip5",
+                "CMIP5"
             ],
             "type": "string"
         },

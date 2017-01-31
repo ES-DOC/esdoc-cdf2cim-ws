@@ -89,6 +89,6 @@
         "source_id",
         "start_time"
     ],
-    "title": "ES-DOC CDF2CIM web-service JSON schema: endpoint = /1/create/cmip6",
+    "title": "ES-DOC CDF2CIM web-service JSON schema: endpoint = /1/cmip5",
     "type": "object"
 }

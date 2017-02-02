@@ -42,4 +42,4 @@ alias cdf2cim-ws-daemon-reload='cdf2cim-ws-daemon-stop && cdf2cim-ws-daemon-star
 alias cdf2cim-ws-daemon-status=$CDF2CIM_WS_HOME/sh/daemon_status.sh
 
 # Test related commands.
-alias cdf2cim-ws-tests=$CDF2CIM_WS_HOME/sh/run_tests.sh
+alias cdf2cim-ws-tests=$CDF2CIM_WS_HOME/sh/tests.sh

@@ -10,7 +10,7 @@ main()
 
 	cd $CDF2CIM_WS_HOME
 	git pull
-    log "shell updated"
+    log "source code updated"
 	source $CDF2CIM_WS_HOME/sh/update_venv.sh
 
     log "update complete"

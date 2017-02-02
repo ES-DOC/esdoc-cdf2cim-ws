@@ -19,6 +19,9 @@ from cdf2cim_ws.utils import exceptions
 
 
 
+# GitHub user name used when applying security filter.
+_GH_USER_NAME = "esdoc-system-user"
+
 # GitHub identifier of cdf2cim-publication team.
 _GH_TEAM_ID = 2206031
 
@@ -57,8 +60,7 @@ def _authorize(gh_login):
 
     """
     # Set authorization credentials.
-    credentials = (os.getenv('CDF2CIM_WS_GITHUB_USER'),
-                   os.getenv('CDF2CIM_WS_GITHUB_ACCESS_TOKEN'))
+    credentials = (_GH_USER_NAME, os.getenv('CDF2CIM_WS_GITHUB_ACCESS_TOKEN'))
 
     # Authorize.
     url = _GH_API_TEAM_MEMBERSHIP.format(_GH_TEAM_ID, gh_login)
@@ -75,8 +77,8 @@ def secure_request(handler):
     :raises: exceptions.AuthenticationError, exceptions.AuthorizationError
 
     """
-    if handler.request.path.split("?")[0] == "/" or \
-       config.network_state == "down":
+    if config.apply_security_policy == False or \
+       handler.request.path.split("?")[0] == "/":
         return
 
     _authorize(_authenticate(handler.request.headers['Authorization']))

@@ -20,15 +20,15 @@ from cdf2cim_ws.utils import exceptions
 
 
 # GitHub user name used when applying security filter.
-_GH_USER_NAME = "esdoc-system-user"
+_GH_SYSTEM_USER = "esdoc-system-user"
 
 # GitHub identifier of cdf2cim-publication team.
 _GH_TEAM_ID = 2206031
 
-# GitHub API - user within GitHub.
+# GitHub user API.
 _GH_API_USER = "https://api.github.com/user"
 
-# GitHub API - ES-DOC-OPS team membership endpoint.
+# GitHub teams API.
 _GH_API_TEAM_MEMBERSHIP = "https://api.github.com/teams/{}/memberships/{}"
 
 
@@ -59,8 +59,8 @@ def _authorize(gh_login):
     """Authorizes user against GitHub team membership api.
 
     """
-    # Set authorization credentials.
-    credentials = (_GH_USER_NAME, os.getenv('CDF2CIM_WS_GITHUB_ACCESS_TOKEN'))
+    # Set system user gh credentials.
+    credentials = (_GH_SYSTEM_USER, os.getenv('CDF2CIM_WS_GITHUB_ACCESS_TOKEN'))
 
     # Authorize.
     url = _GH_API_TEAM_MEMBERSHIP.format(_GH_TEAM_ID, gh_login)

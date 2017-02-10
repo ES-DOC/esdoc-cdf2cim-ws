@@ -38,7 +38,7 @@ alias cdf2cim-ws-reset-logs=$CDF2CIM_WS_HOME/sh/reset_logs.sh
 alias cdf2cim-ws=$CDF2CIM_WS_HOME/sh/app_run.sh
 alias cdf2cim-ws-daemon=$CDF2CIM_WS_HOME/sh/daemon_start.sh
 alias cdf2cim-ws-daemon-stop=$CDF2CIM_WS_HOME/sh/daemon_stop.sh
-alias cdf2cim-ws-daemon-reload='cdf2cim-ws-daemon-stop && cdf2cim-ws-daemon-start'
+alias cdf2cim-ws-daemon-reload=$CDF2CIM_WS_HOME/sh/daemon_reload.sh
 alias cdf2cim-ws-daemon-status=$CDF2CIM_WS_HOME/sh/daemon_status.sh
 
 # Test related commands.

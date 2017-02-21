@@ -14,6 +14,7 @@ main()
 	source $CDF2CIM_WS_HOME/sh/activate_venv.sh
     pip install --upgrade pip
     pip install --upgrade --no-cache-dir -I -r $CDF2CIM_WS_HOME/resources/requirements.txt
+    pip install --upgrade --no-cache-dir -I -r $CDF2CIM_WS_HOME/resources/requirements-pyesdoc.txt
     deactivate
 }
 

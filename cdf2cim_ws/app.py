@@ -10,8 +10,6 @@
 
 
 """
-import os
-
 import tornado.web
 
 from cdf2cim_ws import handlers

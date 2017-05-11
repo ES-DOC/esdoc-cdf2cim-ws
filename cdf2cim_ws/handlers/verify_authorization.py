@@ -52,6 +52,7 @@ class VerifyAuthorizationRequestHandler(tornado.web.RequestHandler):
                 "version": cdf2cim_ws.__version__
             }
 
+
         # Process request.
         process_request(self, [
             _verify,

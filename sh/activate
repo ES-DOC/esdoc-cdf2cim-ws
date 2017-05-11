@@ -22,6 +22,7 @@ mkdir -p $CDF2CIM_WS_HOME/ops/config
 mkdir -p $CDF2CIM_WS_HOME/ops/daemon
 mkdir -p $CDF2CIM_WS_HOME/ops/libs
 mkdir -p $CDF2CIM_WS_HOME/ops/logs
+mkdir -p $CDF2CIM_WS_HOME/ops/output
 
 # ###############################################################
 # STANDARD-SECTION: ALIASES

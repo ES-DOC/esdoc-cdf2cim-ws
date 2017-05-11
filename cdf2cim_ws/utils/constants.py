@@ -10,6 +10,15 @@
 
 
 """
+import os
+
+
+
+# I/O directory.
+IO_DIR = os.getenv('CDF2CIM_WS_HOME')
+IO_DIR = os.path.join(IO_DIR, 'ops')
+IO_DIR = os.path.join(IO_DIR, 'output')
+
 # Default endpoint.
 DEFAULT_ENDPOINT = r'/1/ops/heartbeat'
 
@@ -31,7 +40,7 @@ PROJECT = [
 	}
 ]
 
-# TODO - leverage pyesdoc
+# TODO - leverage pyessv
 # Institute - BADC.
 INSTITUTE_BADC = u"badc"
 

@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 """
-.. module:: handlers.cmip5_simulation.py.py
+.. module:: handlers.cmip6_simulation.py.py
    :license: GPL/CeCIL
    :platform: Unix
-   :synopsis: ES-DOC CDF2CIM - CMIP5 simulation publication handler.
+   :synopsis: ES-DOC CDF2CIM - CMIP6 simulation publication handler.
 
 .. module author:: Mark A. Greenslade <momipsl@ipsl.jussieu.fr>
 
@@ -17,8 +17,8 @@ from cdf2cim_ws.utils.http import process_request
 
 
 
-class CMIP5SimulationRequestHandler(tornado.web.RequestHandler):
-    """CMIP5 simulation publication request handler.
+class CreateRequestHandler(tornado.web.RequestHandler):
+    """Creates a cdf2cim file.
 
     """
     def post(self):
@@ -37,7 +37,7 @@ class CMIP5SimulationRequestHandler(tornado.web.RequestHandler):
 
             """
             self.output = {
-                "message": "CDF2CIM-WS: cdf2cim file written to file system"
+                "message": "CDF2CIM-WS: cdf2cim content written to file system"
             }
 
 

@@ -12,28 +12,37 @@
 """
 import tornado
 
+from cdf2cim_ws.utils import io_manager
 from cdf2cim_ws.utils.http import process_request
 
 
 
 class CMIP6SimulationRequestHandler(tornado.web.RequestHandler):
-    """CMIP5 simulation publication request handler.
+    """CMIP6 simulation publication request handler.
 
     """
     def post(self):
         """HTTP POST handler.
 
         """
+        def _write():
+            """Writes cdf2cim content to file system.
+
+            """
+            io_manager.write(self.request.data)
+
+
         def _set_output():
             """Sets response output.
 
             """
             self.output = {
-                "message": "CDF2CIM-WS: TODO CMIP6 cdf2cim"
+                "message": "CDF2CIM-WS: cdf2cim file written to file system"
             }
 
 
         # Process request.
         process_request(self, [
+            _write,
             _set_output,
             ])

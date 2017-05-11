@@ -2,6 +2,9 @@
     "$schema": "http://json-schema.org/schema#",
     "additionalProperties": false,
     "properties": {
+        "_hash_id": {
+            "type": "string"
+        },
         "activity_id": {
             "maxLength": 63,
             "minLength": 1,
@@ -91,6 +94,7 @@
         }
     },
     "required": [
+        "_hash_id",
         "activity_id",
         "calendar",
         "end_time",

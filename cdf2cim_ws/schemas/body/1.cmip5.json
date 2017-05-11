@@ -2,6 +2,9 @@
     "$schema": "http://json-schema.org/schema#",
     "additionalProperties": false,
     "properties": {
+        "_hash_id": {
+            "type": "string"
+        },
         "branch_time_in_parent": {
             "type": "number"
         },
@@ -69,6 +72,7 @@
         }
     },
     "required": [
+        "_hash_id",
         "branch_time_in_parent",
         "calendar",
         "contact",

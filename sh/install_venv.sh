@@ -11,7 +11,7 @@ main()
     pip install --upgrade pip
     pip install --upgrade virtualenv
     virtualenv $CDF2CIM_WS_HOME/ops/venv
-	source $CDF2CIM_WS_HOME/sh/activate_venv.sh
+    source $CDF2CIM_WS_HOME/sh/activate_venv.sh
     pip install --upgrade pip
     pip install --upgrade --no-cache-dir -I -r $CDF2CIM_WS_HOME/resources/requirements.txt
     pip install --upgrade --no-cache-dir -I -r $CDF2CIM_WS_HOME/resources/requirements-pyesdoc.txt

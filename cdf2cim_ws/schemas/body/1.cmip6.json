@@ -104,7 +104,7 @@
         "realization_index",
         "source_id",
         "start_time",
-        "sub_experiment_id",
+        "sub_experiment_id"
     ],
     "title": "ES-DOC CDF2CIM web-service JSON schema: endpoint = /1/cmip6",
     "type": "object"

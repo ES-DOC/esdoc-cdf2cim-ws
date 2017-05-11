@@ -1,0 +1,28 @@
+{
+    "$schema": "http://json-schema.org/schema#",
+    "additionalProperties": false,
+    "properties": {
+        "login": {
+            "items": {
+                "maxItems": 1,
+                "minItems": 1,
+                "type": "string"
+            },
+            "type": "array"
+        },
+        "token": {
+            "items": {
+                "minItems": 1,
+                "maxItems": 1,
+                "type": "string"
+            },
+            "type": "array"
+        }
+    },
+    "required": [
+        "login",
+        "token"
+    ],
+    "title": "ES-DOC CDF2CIM JSON schema: endpoint = /verify-authorization",
+    "type": "object"
+}

@@ -31,32 +31,33 @@ _GH_API_USER = "https://api.github.com/user"
 # GitHub teams API.
 _GH_API_TEAM_MEMBERSHIP = "https://api.github.com/teams/{}/memberships/{}"
 
+# Set of whitelisted endpoints.
+_WHITELISTED_ENDPOINTS = {
+    '/',
+    '/verify-authorization'
+}
 
-def _authenticate(credentials):
+
+def authenticate(credentials):
     """Authenticates user credentials request against GitHub user api.
 
-    """
-    # Parse HTTP Basic base64 encoded credentials.
-    credentials = credentials.replace('Basic ', '')
-    try:
-        credentials = base64.b64decode(credentials)
-    except TypeError:
-        raise exceptions.AuthenticationError()
-    else:
-        credentials = credentials.split(':')
-        if len(credentials) != 2:
-            raise exceptions.AuthenticationError()
+    :param tuple credentials: 2 member tuple (GitHub username, GitHub access token)
 
-    # Authenticate.
-    r = requests.get(_GH_API_USER, auth=tuple(credentials))
+    :returns: GitHub username
+    :rtype: str
+
+    """
+    r = requests.get(_GH_API_USER, auth=credentials)
     if r.status_code != 200:
         raise exceptions.AuthenticationError()
 
     return credentials[0]
 
 
-def _authorize(gh_login):
+def authorize(gh_login):
     """Authorizes user against GitHub team membership api.
+
+    :param str gh_login: GitHub username
 
     """
     # Set system user gh credentials.
@@ -69,6 +70,23 @@ def _authorize(gh_login):
         raise exceptions.AuthorizationError()
 
 
+def _strip_credentials(http_header):
+    """Strips passed credentials from HTTP header.
+
+    """
+    credentials = http_header.replace('Basic ', '')
+    try:
+        credentials = base64.b64decode(credentials)
+    except TypeError:
+        raise exceptions.AuthenticationError()
+    else:
+        credentials = credentials.split(':')
+        if len(credentials) != 2:
+            raise exceptions.AuthenticationError()
+
+    return tuple(credentials)
+
+
 def secure_request(handler):
     """Enforces request level security policy (if necesaary).
 
@@ -78,7 +96,9 @@ def secure_request(handler):
 
     """
     if config.apply_security_policy == False or \
-       handler.request.path.split("?")[0] == "/":
+       handler.request.path in _WHITELISTED_ENDPOINTS:
         return
 
-    _authorize(_authenticate(handler.request.headers['Authorization']))
+    credentials = _strip_credentials(handler.request.headers['Authorization'])
+
+    authorize(authenticate(credentials))

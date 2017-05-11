@@ -1,3 +1,4 @@
 from cdf2cim_ws.handlers.cmip5_simulation import CMIP5SimulationRequestHandler
 from cdf2cim_ws.handlers.cmip6_simulation import CMIP6SimulationRequestHandler
 from cdf2cim_ws.handlers.heartbeat import HeartbeatRequestHandler
+from cdf2cim_ws.handlers.verify_authorization import VerifyAuthorizationRequestHandler

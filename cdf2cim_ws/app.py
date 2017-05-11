@@ -25,6 +25,7 @@ def _get_app_endpoints():
     """
     return {
         (r'/', handlers.HeartbeatRequestHandler),
+        (r'/verify-authorization', handlers.VerifyAuthorizationRequestHandler),
         (r'/1/cmip5', handlers.CMIP5SimulationRequestHandler),
         (r'/1/cmip6', handlers.CMIP6SimulationRequestHandler)
     }

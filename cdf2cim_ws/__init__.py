@@ -10,7 +10,7 @@
 
 """
 __title__ = 'cdf2cim web service'
-__version__ = '0.1.0.0'
+__version__ = '0.2.0.0'
 __author__ = 'ES-DOC'
 __license__ = 'GPL'
 __copyright__ = 'Copyright 2016: IPSL'

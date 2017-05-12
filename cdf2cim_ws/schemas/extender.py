@@ -12,6 +12,8 @@
 """
 import collections
 
+import pyessv
+
 from cdf2cim_ws.utils import constants
 
 
@@ -20,73 +22,32 @@ _EXTENDERS = collections.defaultdict(dict)
 
 
 def extend(schema, typeof, endpoint):
-	"""Extends a JSON schema with data pulled from controlled vocabularies.
+    """Extends a JSON schema with data pulled from controlled vocabularies.
 
-	:param dict schema: A JSON schema being extended.
-	:param str typeof: Type of JSON schema to be extended.
-	:param str endpoint: Endpoint being mapped to a JSON schema.
+    :param dict schema: A JSON schema being extended.
+    :param str typeof: Type of JSON schema to be extended.
+    :param str endpoint: Endpoint being mapped to a JSON schema.
 
-	"""
-	try:
-		extender = _EXTENDERS[endpoint][typeof]
-	except KeyError:
-		pass
-	else:
-		extender(schema)
-
-
-def _1_issue_search_params(schema):
-	"""Extends a JSON schema used to validate an HTTP operatino.
-
-	"""
-	schema['properties']['institute']['items']['enum'] += \
-		[i['key'] for i in constants.INSTITUTE]
-	schema['properties']['project']['items']['enum'] += \
-		[i['key'] for i in constants.PROJECT]
-	schema['properties']['severity']['items']['enum'] += \
-		[i['key'] for i in constants.SEVERITY]
-	schema['properties']['status']['items']['enum'] += \
-		[i['key'] for i in constants.STATUS]
+    """
+    try:
+        extender = _EXTENDERS[endpoint][typeof]
+    except KeyError:
+        pass
+    else:
+        extender(schema)
 
 
-def _1_issue_close_params(schema):
-	"""Extends a JSON schema used to validate an HTTP operatino.
+def _1_cmip6(schema):
+    """Extends a JSON schema used to validate an HTTP operatino.
 
-	"""
-	schema['properties']['status']['items']['enum'] += \
-		[i['key'] for i in constants.STATUS]
-
-
-def _1_issue_create_body(schema):
-	"""Extends a JSON schema used to validate an HTTP operatino.
-
-	"""
-	schema['properties']['institute']['enum'] = \
-		[i['key'] for i in constants.INSTITUTE]
-	schema['properties']['project']['enum'] = \
-		[i['key'] for i in constants.PROJECT]
-	schema['properties']['severity']['enum'] = \
-		[i['key'] for i in constants.SEVERITY]
-	schema['properties']['status']['enum'] = \
-		[i['key'] for i in constants.STATUS]
-
-
-def _1_issue_update_body(schema):
-	"""Extends a JSON schema used to validate an HTTP operatino.
-
-	"""
-	schema['properties']['institute']['enum'] = \
-		[i['key'] for i in constants.INSTITUTE]
-	schema['properties']['project']['enum'] = \
-		[i['key'] for i in constants.PROJECT]
-	schema['properties']['severity']['enum'] = \
-		[i['key'] for i in constants.SEVERITY]
-	schema['properties']['status']['enum'] = \
-		[i['key'] for i in constants.STATUS]
+    """
+    schema = schema['properties']
+    for collection in {'activity_id', 'experiment_id', 'institution_id', 'source_id'}:
+        names = []
+        for term in pyessv.load("wcrp", "cmip6", collection):
+            names += [term.name, term.label] + term.synonyms
+        schema[collection]['enum'] = sorted(set(names))
 
 
 # Map endpoints to extenders.
-_EXTENDERS['/1/issue/search']['params'] = _1_issue_search_params
-_EXTENDERS['/1/issue/close']['params'] = _1_issue_close_params
-_EXTENDERS['/1/issue/create']['body'] = _1_issue_create_body
-_EXTENDERS['/1/issue/update']['body'] = _1_issue_update_body
+_EXTENDERS['/1/cmip6']['body'] = _1_cmip6

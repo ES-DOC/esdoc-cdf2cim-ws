@@ -12,6 +12,8 @@
 """
 import tornado.web
 
+import pyessv
+
 from cdf2cim_ws import handlers
 from cdf2cim_ws import schemas
 from cdf2cim_ws.utils import config

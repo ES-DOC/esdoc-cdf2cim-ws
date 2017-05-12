@@ -34,6 +34,7 @@ _GH_API_TEAM_MEMBERSHIP = "https://api.github.com/teams/{}/memberships/{}"
 # Set of whitelisted endpoints.
 _WHITELISTED_ENDPOINTS = {
     '/',
+    '/verify',
     '/verify-authorization'
 }
 

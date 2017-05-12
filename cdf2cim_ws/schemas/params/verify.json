@@ -1,0 +1,19 @@
+{
+    "$schema": "http://json-schema.org/schema#",
+    "additionalProperties": false,
+    "properties": {
+        "hashid": {
+            "items": {
+                "maxItems": 1,
+                "minItems": 1,
+                "type": "string"
+            },
+            "type": "array"
+        }
+    },
+    "required": [
+        "hashid"
+    ],
+    "title": "ES-DOC CDF2CIM JSON schema: endpoint = /verify",
+    "type": "object"
+}

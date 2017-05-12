@@ -17,9 +17,6 @@ from cdf2cim_ws.utils.convertor import to_camel_case
 
 
 
-# Request validation error HTTP response code.
-_HTTP_RESPONSE_INVALID_REQUEST_ERROR = 400
-
 # Processing error HTTP response code.
 _HTTP_RESPONSE_SERVER_ERROR = 500
 

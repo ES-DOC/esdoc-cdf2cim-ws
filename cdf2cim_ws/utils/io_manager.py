@@ -45,3 +45,15 @@ def write(metadata):
     log("cdf2cim file written to: {}".format(fpath))
 
     return fpath
+
+
+def file_exists(hash_id):
+    """Returns flag indicating whether a file with a matching hash identifier exists or not.
+
+    """
+    fname = "{}.json".format(hash_id)
+    for files in [i[2] for i in os.walk(IO_DIR, False) if len(i[2]) > 0]:
+        if fname in files:
+            return True
+
+    return False

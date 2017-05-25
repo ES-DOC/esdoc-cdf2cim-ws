@@ -48,7 +48,7 @@ def _1_cmip6(schema):
         ('cmip6', 'source_id')
         }:
         names = []
-        for term in pyessv.load("wcrp", scope, collection):
+        for term in pyessv.load('wcrp', scope, collection):
             names += term.all_names
         schema['properties'][collection]['enum'] = sorted(set(names))
 

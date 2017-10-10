@@ -27,9 +27,9 @@ def test_heartbeat():
     """
     # Invoke WS endpoint.
     url = _URL_HEARTBEAT
-    response = requests.get(_URL_HEARTBEAT)
+    r = requests.get(_URL_HEARTBEAT)
 
     # Assert WS response.
-    response = tu.assert_ws_response(url, response)
-    assert "message" in response
-    assert "version" in response
+    data = tu.assert_ws_response(url, r)
+    assert "message" in data
+    assert "version" in data

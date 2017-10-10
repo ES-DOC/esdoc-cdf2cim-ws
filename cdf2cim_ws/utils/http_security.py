@@ -10,26 +10,19 @@
 
 """
 import base64
-import os
 
-import requests
+from pyesdoc.security import AuthenticationError
+from pyesdoc.security import AuthorizationError
+from pyesdoc.security import is_authenticated_user
+from pyesdoc.security import is_team_member
+from pyesdoc.security import strip_credentials
 
 from cdf2cim_ws.utils import config
-from cdf2cim_ws.utils import exceptions
 
 
-
-# GitHub user name used when applying security filter.
-_GH_SYSTEM_USER = "esdoc-system-user"
 
 # GitHub identifier of cdf2cim-publication team.
 _GH_TEAM_ID = 2206031
-
-# GitHub user API.
-_GH_API_USER = "https://api.github.com/user"
-
-# GitHub teams API.
-_GH_API_TEAM_MEMBERSHIP = "https://api.github.com/teams/{}/memberships/{}"
 
 # Set of whitelisted endpoints.
 _WHITELISTED_ENDPOINTS = {
@@ -48,44 +41,22 @@ def authenticate(credentials):
     :rtype: str
 
     """
-    r = requests.get(_GH_API_USER, auth=credentials)
-    if r.status_code != 200:
-        raise exceptions.AuthenticationError()
+    user_id, access_token = credentials
+    if not is_authenticated_user(user_id, access_token):
+        raise AuthenticationError()
 
-    return credentials[0]
+    return user_id
 
 
-def authorize(gh_login):
+def authorize(user_id):
     """Authorizes user against GitHub team membership api.
 
-    :param str gh_login: GitHub username
+    :param str user_id: GitHub username.
 
     """
-    # Set system user gh credentials.
-    credentials = (_GH_SYSTEM_USER, os.getenv('CDF2CIM_WS_GITHUB_ACCESS_TOKEN'))
-
-    # Authorize.
-    url = _GH_API_TEAM_MEMBERSHIP.format(_GH_TEAM_ID, gh_login)
-    r = requests.get(url, auth=credentials)
-    if r.status_code != 200:
-        raise exceptions.AuthorizationError()
-
-
-def _strip_credentials(http_header):
-    """Strips passed credentials from HTTP header.
-
-    """
-    credentials = http_header.replace('Basic ', '')
-    try:
-        credentials = base64.b64decode(credentials)
-    except TypeError:
-        raise exceptions.AuthenticationError()
-    else:
-        credentials = credentials.split(':')
-        if len(credentials) != 2:
-            raise exceptions.AuthenticationError()
-
-    return tuple(credentials)
+    if not is_team_member(_GH_TEAM_ID, user_id):
+        raise AuthorizationError()
+    # TODO verify institute
 
 
 def secure_request(handler):
@@ -93,13 +64,12 @@ def secure_request(handler):
 
     :param utils.http.HTTPRequestHandler handler: An HTTP request handler.
 
-    :raises: exceptions.AuthenticationError, exceptions.AuthorizationError
+    :raises: AuthenticationError, AuthorizationError
 
     """
     if config.apply_security_policy == False or \
        handler.request.path in _WHITELISTED_ENDPOINTS:
-        return
+       return
 
-    credentials = _strip_credentials(handler.request.headers['Authorization'])
-
+    credentials = strip_credentials(handler.request.headers['Authorization'])
     authorize(authenticate(credentials))

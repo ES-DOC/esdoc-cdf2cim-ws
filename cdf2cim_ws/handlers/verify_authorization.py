@@ -16,6 +16,7 @@ import tornado
 
 import cdf2cim_ws
 from cdf2cim_ws.utils.http import process_request
+from cdf2cim_ws.utils.http_security import authorize
 from cdf2cim_ws.utils.http_security import authenticate
 
 
@@ -37,10 +38,10 @@ class VerifyAuthorizationRequestHandler(tornado.web.RequestHandler):
             """Verifies membership.
 
             """
-            authenticate((
+            authorize(authenticate((
                 self.get_argument(_PARAM_LOGIN),
                 self.get_argument(_PARAM_TOKEN)
-                ))
+                )))
 
 
         def _set_output():
@@ -56,5 +57,5 @@ class VerifyAuthorizationRequestHandler(tornado.web.RequestHandler):
         # Process request.
         process_request(self, [
             _verify,
-            _set_output]
-            )
+            _set_output
+            ])

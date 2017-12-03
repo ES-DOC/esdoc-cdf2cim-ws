@@ -9,20 +9,15 @@
 
 
 """
-import base64
-
-from pyesdoc.security import AuthenticationError
-from pyesdoc.security import AuthorizationError
-from pyesdoc.security import is_authenticated_user
-from pyesdoc.security import is_team_member
-from pyesdoc.security import strip_credentials
+import pyesdoc
 
 from cdf2cim_ws.utils import config
+from cdf2cim_ws.utils import logger
 
 
 
-# GitHub identifier of cdf2cim-publication team.
-_GH_TEAM_ID = 2206031
+# GitHub team name.
+_GH_TEAM = 'cdf2cim-publication'
 
 # Set of whitelisted endpoints.
 _WHITELISTED_ENDPOINTS = {
@@ -30,6 +25,18 @@ _WHITELISTED_ENDPOINTS = {
     '/verify',
     '/verify-authorization'
 }
+
+
+def apply_policy(user_id, access_token):
+    """Applies security policy.
+
+    :param str user_id: GitHub username.
+    :param str access_token: GitHub access token.
+    :param str institute_id: Institute identifier, e.g. ipsl.
+
+    """
+    authenticate((user_id, access_token))
+    authorize(user_id)
 
 
 def authenticate(credentials):
@@ -41,11 +48,7 @@ def authenticate(credentials):
     :rtype: str
 
     """
-    user_id, access_token = credentials
-    if not is_authenticated_user(user_id, access_token):
-        raise AuthenticationError()
-
-    return user_id
+    pyesdoc.authenticate_user(credentials)
 
 
 def authorize(user_id):
@@ -54,22 +57,31 @@ def authorize(user_id):
     :param str user_id: GitHub username.
 
     """
-    if not is_team_member(_GH_TEAM_ID, user_id):
-        raise AuthorizationError()
+    logger.log_web('Authorizing: {} --> {}'.format(user_id, _GH_TEAM))
+    pyesdoc.authorize_user(_GH_TEAM, user_id)
+
     # TODO verify institute
+    # logger.log_web('Authorizing: {} --> {}-{}'.format(user_id, project_id, institute_id))
+    # pyesdoc.authorize_user('{}-{}'.format(project_id, institute_id), user_id)
 
 
 def secure_request(handler):
-    """Enforces request level security policy (if necesaary).
+    """Enforces request level security policy (if necessary).
 
     :param utils.http.HTTPRequestHandler handler: An HTTP request handler.
 
-    :raises: AuthenticationError, AuthorizationError
-
     """
-    if config.apply_security_policy == False or \
-       handler.request.path in _WHITELISTED_ENDPOINTS:
-       return
+    # Escape if endpoint is whitelisted.
+    if handler.request.path in _WHITELISTED_ENDPOINTS:
+        return
 
-    credentials = strip_credentials(handler.request.headers['Authorization'])
-    authorize(authenticate(credentials))
+    # Strip credentials.
+    credentials = pyesdoc.strip_credentials(handler.request.headers['Authorization'])
+
+    # Authenticate.
+    if config.apply_security_policy:
+        logger.log_web('Authenticating: {}'.format(credentials[0]))
+        authenticate(credentials)
+
+    # Make user-id available downstream.
+    handler.user_id = credentials[0]

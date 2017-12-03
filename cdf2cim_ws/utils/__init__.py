@@ -1,2 +1,1 @@
-from cdf2cim_ws.utils import logger
-from cdf2cim_ws.utils.config import data as config
+from cdf2cim_ws.utils.config_loader import data as config

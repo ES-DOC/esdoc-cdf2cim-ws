@@ -29,7 +29,7 @@ with open(os.path.join(SAMPLE_OUTPUT_DIR, 'cmip6-invalid.json'), 'r') as _fstrea
     SAMPLE_OUTPUT_CMIP6_INVALID = _fstream.read()
 
 
-def get_ws_credentials():
+def get_credentials():
     """Returns credentials to be passed to web-service.
 
     """
@@ -41,13 +41,13 @@ def assert_ws_response(
     url,
     response,
     status_code=requests.codes.OK,
-    expected_content=None
+    fields=set()
     ):
     """Asserts a response received from web-service.
 
     """
     # WS url.
-    assert response.url == url
+    assert response.url.split('?')[0] == url.split('?')[0]
 
     # WS response HTTP status code.
     assert response.status_code == status_code, \
@@ -68,7 +68,7 @@ def assert_ws_response(
     # Default WS respponse headers.
     assert len(response.headers) >= 3
     for header in {
-        'Content-Length',
+        # 'Content-Length',
         'Content-Type',
         'Date',
         'Server',
@@ -77,13 +77,11 @@ def assert_ws_response(
         assert header in response.headers
 
     # WS response content must be utf-8 encoded JSON.
-    if response.status_code == requests.codes.OK and response.text:
-        assert response.encoding == u'utf-8'
+    if response.text:
+        assert response.encoding.lower() == u'utf-8'
         content = response.json()
         assert isinstance(content, dict)
-
-        # WS response content.
-        if expected_content is not None:
-            assert content == expected_content
+        for field in fields:
+            assert field in content
 
         return content

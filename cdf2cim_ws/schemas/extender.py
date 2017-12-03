@@ -41,16 +41,16 @@ def _1_cmip6(schema):
     """Extends a JSON schema used to validate an HTTP operatino.
 
     """
-    for scope, collection in {
-        ('cmip6', 'activity_id'),
-        ('cmip6', 'experiment_id'),
-        ('cmip6', 'institution_id'),
-        ('cmip6', 'source_id')
+    for vocab in {
+        'wcrp:cmip6:activity_id',
+        'wcrp:cmip6:experiment_id',
+        'wcrp:cmip6:institution_id',
+        'wcrp:cmip6:source_id'
         }:
         names = []
-        for term in pyessv.load('wcrp', scope, collection):
+        for term in pyessv.load(vocab):
             names += term.all_names
-        schema['properties'][collection]['enum'] = sorted(set(names))
+        schema['properties'][vocab.split(':')[-1]]['enum'] = sorted(set(names))
 
 
 # Map endpoints to extenders.

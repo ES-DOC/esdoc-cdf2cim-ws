@@ -9,17 +9,9 @@
 
 
 """
-# Processing error HTTP response code.
-_HTTP_RESPONSE_SERVER_ERROR = 500
+import pyesdoc
 
-# Request validation error HTTP response code.
-_HTTP_RESPONSE_INVALID_REQUEST_ERROR = 400
-
-# Request authentication error HTTP response code.
-_HTTP_UNAUTHENTICATED_ERROR = 401
-
-# Request authorization error HTTP response code.
-_HTTP_UNAUTHORIZED_ERROR = 403
+from cdf2cim_ws.utils import constants
 
 
 class WebServiceError(Exception):
@@ -34,47 +26,7 @@ class WebServiceError(Exception):
         self.response_code = response_code
 
 
-class SecurityError(WebServiceError):
-    """Raised if a security issue arises.
-
-    """
-    def __init__(self, msg, response_code):
-        """Instance constructor.
-
-        """
-        super(SecurityError, self).__init__(
-            "SECURITY EXCEPTION :: {}".format(msg),
-            response_code
-            )
-
-
-class AuthenticationError(SecurityError):
-    """Raised when an authentication assertion fails.
-
-    """
-    def __init__(self):
-        """Instance constructor.
-
-        """
-        super(SecurityError, self).__init__(
-            "AUTHENTICATION FAILED", _HTTP_UNAUTHENTICATED_ERROR
-            )
-
-
-class AuthorizationError(SecurityError):
-    """Raised when an authorization assertion fails.
-
-    """
-    def __init__(self):
-        """Instance constructor.
-
-        """
-        super(SecurityError, self).__init__(
-            "AUTHORIZATION FAILED", _HTTP_UNAUTHORIZED_ERROR
-            )
-
-
-class RequestValidationException(SecurityError):
+class RequestValidationException(WebServiceError):
     """Base class for request validation exceptions.
 
     """
@@ -82,19 +34,28 @@ class RequestValidationException(SecurityError):
         """Instance constructor.
 
         """
-        super(RequestValidationException, self).__init__(
-            "REQUEST VALIDATION FAILED :: {}".format(msg),
-            _HTTP_RESPONSE_INVALID_REQUEST_ERROR
-            )
+        super(RequestValidationException, self).__init__(msg, constants.HTTP_RESPONSE_BAD_REQUEST_ERROR)
 
 
-class InvalidJSONSchemaError(RequestValidationException):
-    """Raised if the submitted HTTP POST data is invalid according to a JSON schema.
+class InvalidJSONError(RequestValidationException):
+    """Raised if the submitted issue post data is invalid according to a JSON schema.
 
     """
-    def __init__(self, json_errors):
+    def __init__(self, json_err):
         """Instance constructor.
 
         """
-        super(InvalidJSONSchemaError, self).__init__(
-            'ISSUE HAS INVALID JSON SCHEMA: \n{}'.format(json_errors))
+        msg = json_err.message.strip()
+        try:
+            self.field = json_err.path[0]
+        except Exception as err:
+            self.field = msg.split("'")[1]
+        super(InvalidJSONError, self).__init__(msg)
+
+
+# Map of managed error codes.
+ERROR_CODES = {
+    InvalidJSONError: 900,
+    pyesdoc.AuthenticationError: 990,
+    pyesdoc.AuthorizationError: 991
+}

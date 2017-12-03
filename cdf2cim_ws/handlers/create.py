@@ -25,6 +25,14 @@ class CreateRequestHandler(tornado.web.RequestHandler):
         """HTTP POST handler.
 
         """
+        def _validate_hashid():
+            """Validate hash identifier.
+
+            """
+            # TODO - perform same hash compute as on client
+            pass
+
+
         def _write():
             """Writes cdf2cim content to file system.
 
@@ -43,6 +51,7 @@ class CreateRequestHandler(tornado.web.RequestHandler):
 
         # Process request.
         process_request(self, [
+            _validate_hashid,
             _write,
             _set_output,
             ])

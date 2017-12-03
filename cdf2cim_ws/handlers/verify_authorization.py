@@ -10,14 +10,11 @@
 
 
 """
-import datetime as dt
-
 import tornado
 
-import cdf2cim_ws
+from cdf2cim_ws.utils import config
 from cdf2cim_ws.utils.http import process_request
-from cdf2cim_ws.utils.http_security import authorize
-from cdf2cim_ws.utils.http_security import authenticate
+from cdf2cim_ws.utils.http_security import apply_policy
 
 
 
@@ -38,10 +35,11 @@ class VerifyAuthorizationRequestHandler(tornado.web.RequestHandler):
             """Verifies membership.
 
             """
-            authorize(authenticate((
-                self.get_argument(_PARAM_LOGIN),
-                self.get_argument(_PARAM_TOKEN)
-                )))
+            if config.apply_security_policy == True:
+                apply_policy(
+                    self.get_argument(_PARAM_LOGIN),
+                    self.get_argument(_PARAM_TOKEN)
+                    )
 
 
         def _set_output():
@@ -49,8 +47,7 @@ class VerifyAuthorizationRequestHandler(tornado.web.RequestHandler):
 
             """
             self.output = {
-                "message": "ES-DOC CDF2CIM publication membership is active",
-                "version": cdf2cim_ws.__version__
+                'message': 'User allowed to publish cdf2cim'
             }
 
 

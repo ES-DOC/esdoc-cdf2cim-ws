@@ -45,6 +45,7 @@ class VerifyRequestHandler(tornado.web.RequestHandler):
             """
             if self.file_exists == True:
                 self.output = {
+                    "hashid": self.get_argument(_PARAM_HASH_ID),
                     "message": "ES-DOC CDF2CIM cdf2cim file exists",
                     "version": cdf2cim_ws.__version__
                 }
@@ -55,5 +56,5 @@ class VerifyRequestHandler(tornado.web.RequestHandler):
         # Process request.
         process_request(self, [
             _verify,
-            _set_output]
-            )
+            _set_output
+            ])

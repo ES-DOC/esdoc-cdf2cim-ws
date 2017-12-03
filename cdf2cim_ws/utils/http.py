@@ -9,23 +9,40 @@
 
 
 """
-from cdf2cim_ws.utils.http_security import secure_request
-from cdf2cim_ws.utils.http_validator import validate_request
 from cdf2cim_ws.utils import logger
+from cdf2cim_ws.utils.constants import *
 from cdf2cim_ws.utils.convertor import to_dict
 from cdf2cim_ws.utils.convertor import to_camel_case
+from cdf2cim_ws.utils.exceptions import ERROR_CODES
+from cdf2cim_ws.utils.http_security import secure_request
+from cdf2cim_ws.utils.http_validator import validate_request
 
 
 
-# Processing error HTTP response code.
-_HTTP_RESPONSE_SERVER_ERROR = 500
+def process_request(handler, tasks, error_tasks=None):
+    """Invokes a set of HTTP request processing tasks.
 
-
-def _can_return_debug_info(handler):
-    """Gets flag indicating whether the application can retrun debug information.
+    :param HTTPRequestHandler handler: Request processing handler.
+    :param list tasks: Collection of processing tasks.
+    :param list error_tasks: Collection of error processing tasks.
 
     """
-    return handler.application.settings.get('debug', False)
+    # Extend tasksets.
+    tasks = _get_tasks([_log_begin, secure_request, validate_request], tasks, [_log_success, _write_success])
+    error_tasks = _get_tasks([], error_tasks or [], [_log_error, write_error])
+
+    # Invoke tasksets.
+    for task in tasks:
+        try:
+            _invoke_task(handler, task)
+        except Exception as err:
+            try:
+                for task in error_tasks:
+                    _invoke_task(handler, task, err)
+            except:
+                # suppress error processing exceptions
+                pass
+            break
 
 
 def _log(handler, msg, is_error=False):
@@ -37,6 +54,15 @@ def _log(handler, msg, is_error=False):
         logger.log_web_error(msg)
     else:
         logger.log_web(msg)
+
+
+def _log_begin(handler):
+    """Logs beginning of request processing.
+
+    """
+    msg = "[{0}]: executing --> {1}"
+    msg = msg.format(id(handler), handler)
+    logger.log_web(msg)
 
 
 def _log_error(handler, error):
@@ -51,15 +77,6 @@ def _log_success(handler):
 
     """
     _log(handler, "success --> {}".format(handler))
-
-
-def _log_begin(handler):
-    """Logs beginning of request processing.
-
-    """
-    msg = "[{}]: executing --> {}"
-    msg = msg.format(id(handler), handler)
-    logger.log_web(msg)
 
 
 def _write_null(handler, data):
@@ -120,7 +137,7 @@ _WRITERS = {
 }
 
 
-def _write(handler, data, encoding):
+def _write(handler, data, encoding='json'):
     """Writes HTTP response data.
 
     """
@@ -141,42 +158,46 @@ def write_error(handler, error):
     # Reset handler output.
     handler.clear()
 
-    # Set reason code (exception shielding when not in PROD).
-    reason = unicode(error) if _can_return_debug_info(handler) else None
+    # Set error info to be returned to client.
+    _write(handler, {
+        'error_code': ERROR_CODES.get(type(error), 999),
+        'error_field': getattr(error, 'field', '--'),
+        'error_message': error.message.strip(),
+        'error_type': type(error).__name__
+    })
 
-    # Set response code.
+    # Set response HTTP status code.
     try:
-        response_code = error.response_code
+        handler.set_status(error.response_code)
     except AttributeError:
-        response_code = _HTTP_RESPONSE_SERVER_ERROR
-
-    # Return error.
-    handler.send_error(response_code, reason=reason.replace("\n", ""))
+        handler.set_status(HTTP_RESPONSE_SERVER_ERROR)
 
 
 def _write_success(handler):
     """Writes processing success to response stream.
 
     """
+    # Set response encoding.
     try:
         encoding = handler.output_encoding
     except AttributeError:
         encoding = 'json'
 
+    # Set response data.
     try:
         data = handler.output
     except AttributeError:
         data = unicode()
         encoding = None
 
+    # Write respponse.
     _write(handler, data, encoding)
 
+    # Clean up.
     try:
-        handler.output
+        del handler.output
     except AttributeError:
         pass
-    else:
-        del handler.output
 
 
 def _get_tasks(pre_tasks, tasks, post_tasks):
@@ -191,54 +212,18 @@ def _get_tasks(pre_tasks, tasks, post_tasks):
     return pre_tasks + tasks + post_tasks
 
 
-def _invoke(handler, task, err=None):
+def _invoke_task(handler, task, err=None):
     """Invokes a task.
 
     """
-    # TODO: use inspect to determine function signatures as TypeError may be masked.
     try:
         if err:
             task(handler, err)
         else:
             task(handler)
-    except TypeError:
+    except TypeError as te:
         if err:
             task(err)
         else:
             task()
 
-
-def process_request(handler, tasks, error_tasks=None):
-    """Invokes a set of HTTP request processing tasks.
-
-    :param HTTPRequestHandler handler: Request processing handler.
-    :param list tasks: Collection of processing tasks.
-    :param list error_tasks: Collection of error processing tasks.
-
-    """
-    # Extend tasksets.
-    tasks = _get_tasks(
-        [_log_begin, secure_request, validate_request],
-        tasks,
-        [_log_success, _write_success]
-        )
-    error_tasks = _get_tasks(
-        [],
-        error_tasks or [],
-        [_log_error, write_error]
-        )
-
-    # Invoke tasksets:
-    # ... normal processing;
-    for task in tasks:
-        try:
-            _invoke(handler, task)
-        except BaseException as err:
-            # ... error processing;
-            try:
-                for task in error_tasks:
-                    _invoke(handler, task, err)
-            # ... error processing exceptions are suppressed
-            except:
-                pass
-            break

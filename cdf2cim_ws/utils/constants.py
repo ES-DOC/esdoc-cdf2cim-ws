@@ -14,31 +14,20 @@ import os
 
 
 
+# Default endpoint.
+DEFAULT_ENDPOINT = r'/1/ops/heartbeat'
+
+# HTTP CORS header.
+HTTP_HEADER_Access_Control_Allow_Origin = "Access-Control-Allow-Origin"
+
+# Processing error HTTP response codes.
+HTTP_RESPONSE_BAD_REQUEST_ERROR = 400
+HTTP_RESPONSE_SERVER_ERROR = 500
+
 # I/O directory.
 IO_DIR = os.getenv('CDF2CIM_WS_HOME')
 IO_DIR = os.path.join(IO_DIR, 'ops')
 IO_DIR = os.path.join(IO_DIR, 'output')
-
-# Default endpoint.
-DEFAULT_ENDPOINT = r'/1/ops/heartbeat'
-
-# Project - cmip5.
-PROJECT_CMIP5 = u"cmip5"
-
-# Project - cmip6.
-PROJECT_CMIP6 = u"cmip6"
-
-# Project - all.
-PROJECT = [
-	{
-	    'key': PROJECT_CMIP5,
-	    'label': u"CMIP5"
-	},
-	{
-	    'key': PROJECT_CMIP6,
-	    'label': u"CMIP6"
-	}
-]
 
 # TODO - leverage pyessv
 # Institute - BADC.
@@ -65,3 +54,25 @@ INSTITUTE = [
 	    'label': u"IPSL"
 	}
 ]
+
+# JSON field names.
+JF_HASHID = '_hashid'
+
+# Project - cmip5.
+PROJECT_CMIP5 = u"cmip5"
+
+# Project - cmip6.
+PROJECT_CMIP6 = u"cmip6"
+
+# Project - all.
+PROJECT = [
+	{
+	    'key': PROJECT_CMIP5,
+	    'label': u"CMIP5"
+	},
+	{
+	    'key': PROJECT_CMIP6,
+	    'label': u"CMIP6"
+	}
+]
+

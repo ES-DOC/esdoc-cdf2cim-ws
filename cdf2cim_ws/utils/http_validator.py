@@ -23,7 +23,7 @@ def validate_request(handler):
 
     :param utils.http.HTTPRequestHandler handler: An HTTP request handler.
 
-    :raises: exceptions.SecurityError, exceptions.InvalidJSONSchemaError
+    :raises: exceptions.SecurityError, exceptions.InvalidJSONError
 
     """
     for func in {
@@ -116,4 +116,4 @@ def _validate(handler, data, schema):
     try:
         jsonschema.validate(data, schema)
     except jsonschema.exceptions.ValidationError as json_errors:
-        raise exceptions.InvalidJSONSchemaError(json_errors)
+        raise exceptions.InvalidJSONError(json_errors)

@@ -10,10 +10,10 @@
 
 """
 __title__ = 'cdf2cim web service'
-__version__ = '0.2.1.0'
+__version__ = '0.3.0.0'
 __author__ = 'ES-DOC'
 __license__ = 'GPL'
-__copyright__ = 'Copyright 2016: IPSL'
+__copyright__ = 'Copyright 2018: IPSL'
 
 from cdf2cim_ws.app import run
 from cdf2cim_ws.app import stop

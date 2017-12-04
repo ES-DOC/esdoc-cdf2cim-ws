@@ -2,7 +2,6 @@ arrow
 github3.py
 jsonschema
 nose
-pyesdoc
 requests
 supervisor
 tornado

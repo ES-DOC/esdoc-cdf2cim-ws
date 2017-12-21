@@ -23,6 +23,7 @@ def load(typeof, endpoint):
 
 	"""
 	fpath = _get_fpath(typeof, endpoint)
+	print 888, endpoint, fpath
 	if os.path.exists(fpath):
 		try:
 			with open(fpath, 'r') as fstream:
@@ -39,7 +40,7 @@ def _get_fpath(typeof, endpoint):
 	"""Returns schema file path.
 
 	"""
-	endpoint = constants.DEFAULT_ENDPOINT if endpoint == '/' else endpoint
+	endpoint = '/default' if endpoint == '/' else endpoint
 	fname = "{}.json".format(endpoint[1:].replace("/", "."))
 	fpath = os.path.join(os.path.dirname(__file__), typeof)
 

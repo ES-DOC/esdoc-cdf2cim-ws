@@ -23,28 +23,28 @@ def write(metadata):
     """Write metadata to file system for subsequent processing.
 
     """
-    # Set output directory.
-    dpath = IO_DIR
-    dpath = os.path.join(dpath, metadata['mip_era'].lower())
-    dpath = os.path.join(dpath, metadata['institution_id'].lower())
-    dpath = os.path.join(dpath, metadata['source_id'].lower())
-    dpath = os.path.join(dpath, metadata['experiment_id'].lower())
-    fpath = os.path.join(dpath, "{}.json".format(metadata['_hash_id']))
-
-    # Set output.
+    # Set output data.
     output = collections.OrderedDict()
     for k in sorted(metadata):
         output[k] = metadata[k]
 
-    # Write to file system.
-    if not os.path.isdir(dpath):
-        os.makedirs(dpath)
-    with open(fpath, 'w') as fstream:
+    # Set output path.
+    path = IO_DIR
+    path = os.path.join(path, metadata['mip_era'].lower())
+    path = os.path.join(path, metadata['institution_id'].lower())
+    path = os.path.join(path, metadata['source_id'].lower())
+    path = os.path.join(path, metadata['experiment_id'].lower())
+    if not os.path.isdir(path):
+        os.makedirs(path)
+    path = os.path.join(path, "{}.json".format(metadata['_hash_id']))
+
+    # Write.
+    with open(path, 'w') as fstream:
         fstream.write(json.dumps(output, indent=4))
 
-    log("cdf2cim file written to: {}".format(fpath))
+    log("cdf2cim file written to: {}".format(path))
 
-    return fpath
+    return path
 
 
 def file_exists(hash_id):

@@ -6,6 +6,9 @@
 export CDF2CIM_WS_HOME="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 export CDF2CIM_WS_HOME="$( cd "$( dirname "${CDF2CIM_WS_HOME[0]}" )" && pwd )"
 
+# Set python path
+export PYTHONPATH=$CDF2CIM_WS_HOME:$PYTHONPATH
+
 # Set pip
 export CDF2CIM_WS_PIP=pip
 

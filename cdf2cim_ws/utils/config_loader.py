@@ -19,8 +19,31 @@ from cdf2cim_ws.utils.convertor import json_file_to_namedtuple
 # Default configuration file path.
 _CONFIG_FPATH = "ws.conf"
 
+# Set of environment variables.
+_ENV_VARS = {
+    'CDF2CIM_ARCHIVE_HOME',
+    }
+
 # Configuration data.
 data = None
+
+
+def _init():
+    """Initializes configuration.
+
+    """
+    global data
+
+    # Validate expected environment variables.
+    _validate_env_vars()
+
+    # Get configuration file path (falling back to template if necessary).
+    fpath = _get_config_fpath()
+
+    # Convert config file to a named tuple.
+    data = json_file_to_namedtuple(fpath)
+
+    logger.log_web("Configuration file loaded @ {}".format(fpath))
 
 
 def _get_config_fpath():
@@ -39,21 +62,15 @@ def _get_config_fpath():
     raise RuntimeError(err)
 
 
-def _init():
-    """Initializes configuration.
+def _validate_env_vars():
+    """Validates environment variables.
 
     """
-    global data
-
-    # Get configuration file path (falling back to template if necessary).
-    fpath = _get_config_fpath()
-
-    # Convert config file to a named tuple.
-    data = json_file_to_namedtuple(fpath)
-
-    logger.log_web("Configuration file loaded @ {}".format(fpath))
+    for ev in _ENV_VARS:
+        if os.getenv('CDF2CIM_ARCHIVE_HOME') is None:
+            err = "ESDOC-CDF2CIM-WS environment variable ({0}) could not be found".format(ev)
+            raise RuntimeError(err)
 
 
 # Auto-initialize.
 _init()
-

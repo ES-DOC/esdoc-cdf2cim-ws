@@ -36,8 +36,8 @@ def _get_formatted_message(msg, module, level):
     if msg is None:
         return _NULL_MSG
 
-    return "{} [{}] :: ES-DOC > {} : {}".format(
-        unicode(arrow.get())[0:-13],
+    return "{} [{}] :: ESDOC-{} :: {}".format(
+        unicode(arrow.get())[0:-6],
         level,
         module,
         unicode(msg).strip()
@@ -97,7 +97,7 @@ def log_db(msg, level=LOG_LEVEL_INFO):
     :param str level: Message level (e.g. INFO).
 
     """
-    log(msg, "DB", level)
+    log(msg, "CDF2CIM-DB", level)
 
 
 def log_db_warning(msg):
@@ -116,7 +116,7 @@ def log_db_error(err):
     :param Exception err: Exception to be logged.
 
     """
-    log_error(err, "DB")
+    log_error(err, "CDF2CIM-DB")
 
 
 def log_web(msg, level=LOG_LEVEL_INFO):
@@ -126,7 +126,7 @@ def log_web(msg, level=LOG_LEVEL_INFO):
     :param str level: Message level (e.g. INFO).
 
     """
-    log(msg, "WEB", level)
+    log(msg, "CDF2CIM-WS", level)
 
 
 def log_web_warning(msg):
@@ -153,4 +153,4 @@ def log_web_error(err):
     :param Exception err: Exception to be logged.
 
     """
-    log_error(err, "WEB")
+    log_error(err, "CDF2CIM-WS")

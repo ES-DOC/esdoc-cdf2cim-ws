@@ -42,6 +42,13 @@
             "minLength": 1,
             "type": "string"
         },
+        "filenames": {
+            "items": {
+                "type": "string"
+            },
+            "type": "array",
+            "uniqueItems": true
+        },
         "forcing_index": {
             "type": "integer"
         },

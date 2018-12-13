@@ -28,6 +28,13 @@
         "experiment_id": {
             "type": "string"
         },
+        "filenames": {
+            "items": {
+                "type": "string"
+            },
+            "type": "array",
+            "uniqueItems": true
+        },
         "forcing": {
             "type": "string"
         },

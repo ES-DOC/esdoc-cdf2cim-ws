@@ -23,7 +23,6 @@ def load(typeof, endpoint):
 
 	"""
 	fpath = _get_fpath(typeof, endpoint)
-	# print 888, endpoint, fpath
 	if os.path.exists(fpath):
 		try:
 			with open(fpath, 'r') as fstream:

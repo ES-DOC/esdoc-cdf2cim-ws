@@ -47,10 +47,19 @@ def _1_cmip6(schema):
         'wcrp:cmip6:institution_id',
         'wcrp:cmip6:source_id'
         }:
+        # Set vocab names.
         names = []
         for term in pyessv.load(vocab):
             names += term.all_names
-        schema['properties'][vocab.split(':')[-1]]['enum'] = sorted(set(names))
+        names += ['CSIRO-BOM']
+
+        # Set schema fragment.
+        schema_fragment = schema['properties'][vocab.split(':')[-1]]
+        if vocab == 'wcrp:cmip6:activity_id':
+            schema_fragment = schema_fragment['items']
+
+        # Inject enum values.
+        schema_fragment['enum'] = sorted(set(names))
 
 
 # Map endpoints to extenders.

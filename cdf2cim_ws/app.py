@@ -72,7 +72,7 @@ def run():
 
     # Open port.
     app.listen(config.port)
-    log("Ready")
+    log("Ready @ {}".format(config.port))
 
     # Start processing requests.
     tornado.ioloop.IOLoop.instance().start()
@@ -84,4 +84,3 @@ def stop():
     """
     ioloop = tornado.ioloop.IOLoop.instance()
     ioloop.add_callback(lambda x: x.stop(), ioloop)
-

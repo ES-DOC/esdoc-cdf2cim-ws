@@ -27,4 +27,4 @@ Explore the install directory, i.e. YOUR_WORKING_DIRECTORY/esdoc-cd2cim-ws.  The
 
 **Step 4: Security**
 
-The web-service applies a security policy whereby each request is authenticated and authorized against the GitHub API.  If you wish to run/test this policy usage then you will need to obtain a GitHub access token from the ES-DOC team.  Once you have the token you must set the following environment variable: CDF2CIM_WS_GITHUB_ACCESS_TOKEN.  You will also need to update your ws.conf: apply_security_policy = true.
+The web-service applies a security policy whereby each request is authenticated and authorized against the GitHub API.  If you wish to run/test this policy usage then you will need to obtain a GitHub access token from the ES-DOC team.  Once you have the token you must set the following environment variable: ESDOC_GITHUB_ACCESS_TOKEN.  You will also need to update your ws.conf: apply_security_policy = true.

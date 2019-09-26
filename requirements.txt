@@ -5,3 +5,5 @@ nose
 requests
 supervisor
 tornado
+pyessv
+pyesdoc

@@ -60,10 +60,6 @@ def authorize(user_id):
     logger.log_web('Authorizing: {} --> {}'.format(user_id, _GH_TEAM))
     pyesdoc.authorize_user(_GH_TEAM, user_id)
 
-    # TODO verify institute
-    # logger.log_web('Authorizing: {} --> {}-{}'.format(user_id, project_id, institute_id))
-    # pyesdoc.authorize_user('{}-{}'.format(project_id, institute_id), user_id)
-
 
 def secure_request(handler):
     """Enforces request level security policy (if necessary).

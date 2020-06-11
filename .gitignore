@@ -90,3 +90,5 @@ ENV/
 
 # Ops sub-folder
 /ops
+
+*.lock

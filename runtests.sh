@@ -12,11 +12,10 @@ main()
 {
     log "CDF2CIM-TESTS : execution starts ..."
 
-    source $CDF2CIM_WS_HOME/sh/activate_venv.sh
-
-    nosetests -v -s $CDF2CIM_WS_HOME/tests
-    # nosetests -v -s $CDF2CIM_WS_HOME/tests/test_ops.py
-    # nosetests -v -s $CDF2CIM_WS_HOME/tests/test_publication.py
+	pushd $CDF2CIM_WS_HOME
+    pipenv run nosetests -v -s $CDF2CIM_WS_HOME/tests
+    # pipenv run nosetests -v -s $CDF2CIM_WS_HOME/tests/test_ops.py
+    # pipenv run nosetests -v -s $CDF2CIM_WS_HOME/tests/test_publication.py
 
     log "CDF2CIM-TESTS : execution complete ..."
 }

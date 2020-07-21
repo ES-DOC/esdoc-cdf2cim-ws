@@ -41,7 +41,6 @@ def _validate_request_cookies(handler):
 
     """
     if len(handler.request.cookies) > 0:
-        print handler.request.cookies
         raise exceptions.RequestValidationException("Unexpected cookies")
 
 

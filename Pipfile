@@ -13,10 +13,9 @@ requests = "*"
 supervisor = "*"
 tornado = "*"
 pyessv = "*"
-pyesdoc = "*"
 "github3.py" = "*"
 "backports.ssl_match_hostname" = "*"
 backports_abc = "*"
 
 [requires]
-python_version = "2.7"
+python_version = "3.8"

@@ -9,9 +9,9 @@
 
 
 """
-import pyesdoc
-
 from cdf2cim_ws.utils import constants
+from cdf2cim_ws.utils import security
+
 
 
 class WebServiceError(Exception):
@@ -56,6 +56,6 @@ class InvalidJSONError(RequestValidationException):
 # Map of managed error codes.
 ERROR_CODES = {
     InvalidJSONError: 900,
-    pyesdoc.AuthenticationError: 990,
-    pyesdoc.AuthorizationError: 991
+    security.AuthenticationError: 990,
+    security.AuthorizationError: 991,
 }

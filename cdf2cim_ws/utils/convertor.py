@@ -12,16 +12,11 @@
 import collections
 import datetime
 import json
+import re
 import time
-import uuid
-
-
 
 # Set of types to be ignored when jsonifying.
-_IGNOREABLE = (int, float, long, type(None), unicode)
-
-# Set of unicodeable types used in jsonifying.
-_UNICODEABLE = (basestring, datetime.datetime, uuid.UUID)
+_IGNOREABLE = (int, float, type(None), str)
 
 # Values considered to be abbreviations.
 _ABBREVIATIONS = ("id", "uid", "uuid")
@@ -32,12 +27,16 @@ _DEFAULT_SEPARATOR = "_"
 # Set of db coumns that are ignored when converting db entity instances.
 _IGNORED_DB_COLUMNS = {'id', 'row_create_date', 'row_update_date'}
 
+# Default dictionary key convertor.
+_DEFAULT_KEY_CONVERTOR = lambda k: str(k)
 
-def to_dict(data, key_convertor=None):
+
+
+def to_dict(data, key_convertor=_DEFAULT_KEY_CONVERTOR):
     """Converts input data to a dictionary.
 
     :param object data: Data to be converted.
-    :param func key_convertor: Dictionary key convertor.
+    :param func key_convertor: Dictionary key formatter.
 
     :returns: Converted data.
     :rtype: object
@@ -47,24 +46,23 @@ def to_dict(data, key_convertor=None):
     if isinstance(data, _IGNOREABLE):
         return data
 
-    # Unicodeable types.
-    elif isinstance(data, _UNICODEABLE):
-        return unicode(data)
+    # datetime type.
+    elif isinstance(data, datetime.datetime):
+        return '{}+00:00'.format(str(data)[:19])
 
     # Dictionaries.
-    elif isinstance(data, collections.Mapping):
-        return {k if key_convertor is None else key_convertor(k):
-                to_dict(v, key_convertor) for k, v in data.iteritems()}
+    elif isinstance(data, collections.abc.Mapping):
+        return { key_convertor(k): to_dict(v, key_convertor) for k, v in iter(data.items()) }
 
     # Collections.
-    elif isinstance(data, collections.Iterable):
+    elif isinstance(data, collections.abc.Iterable):
         return [to_dict(i, key_convertor) for i in data]
 
     else:
         return data
 
 
-def to_namedtuple(obj, key_convertor=None):
+def to_namedtuple(obj, key_convertor=_DEFAULT_KEY_CONVERTOR):
     """Converts a dictionary to a named tuple.
 
     :param dict obj: Dictionary for conversion.
@@ -75,9 +73,12 @@ def to_namedtuple(obj, key_convertor=None):
 
     """
     obj = to_dict(obj, key_convertor)
-    kls = collections.namedtuple('_Class', obj.keys())
+    # Convert sub-dictionaries.
+    for k, v in obj.items():
+        if isinstance(v, dict):
+            obj[k] = to_namedtuple(v, key_convertor)
 
-    return kls(**obj)
+    return collections.namedtuple('_Class', obj.keys())(**obj)
 
 
 def to_json(data):
@@ -93,7 +94,7 @@ def to_json(data):
     return json.dumps(to_dict(data, key_convertor=to_camel_case))
 
 
-def json_file_to_dict(fpath, key_convertor=None):
+def json_file_to_dict(fpath, key_convertor=_DEFAULT_KEY_CONVERTOR):
     """Converts a json file to a dictionary.
 
     :param str fpath: A json file path.
@@ -109,7 +110,7 @@ def json_file_to_dict(fpath, key_convertor=None):
     return to_dict(fdata, key_convertor)
 
 
-def json_file_to_namedtuple(fpath, key_convertor=None):
+def json_file_to_namedtuple(fpath, key_convertor=_DEFAULT_KEY_CONVERTOR):
     """Converts a json file to a namedtuple.
 
     :param str fpath: A json file path.
@@ -173,53 +174,3 @@ def to_camel_case(target, separator=_DEFAULT_SEPARATOR):
             result += text[0].lower()
             result += text[1:]
     return result
-
-
-def to_spaced_case(target, separator=_DEFAULT_SEPARATOR):
-    """Converts a string to spaced case.
-
-    :param str target: A string for conversion.
-
-    :returns: A string converted to spaced case.
-    :rtype: str
-
-    """
-    if target is None:
-        return ""
-    elif separator is not None and len(target.split(separator)) > 1:
-        return " ".join(target.split(separator))
-    elif target.find(" ") == -1:
-        return re.sub("([A-Z])", r" \g<0>", target).strip()
-    else:
-        return target
-
-
-def to_underscore_case(target):
-    """Converts a string to underscore case.
-
-    :param str target: A string for conversion.
-
-    :returns: A string converted to underscore case, e.g. account_number.
-    :rtype: str
-
-    """
-    if target is None or not len(target):
-        return unicode()
-
-    result = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', target)
-    result = re.sub('([a-z0-9])([A-Z])', r'\1_\2', result)
-
-    return result.lower()
-
-
-
-def now_to_timestamp(offset=0):
-    """Returns a timestamp from datatime.datetime.now().
-
-    """
-    now = time.time()
-    localtime = time.localtime(now)
-    milliseconds = '%03d' % int((now - int(now)) * 1000)
-    ts = time.strftime('%Y%m%d%H%M%S', localtime) + milliseconds
-
-    return int(ts) + offset

@@ -9,10 +9,9 @@
 
 
 """
-import pyesdoc
-
 from cdf2cim_ws.utils import config
 from cdf2cim_ws.utils import logger
+from cdf2cim_ws.utils import security
 
 
 
@@ -48,7 +47,7 @@ def authenticate(credentials):
     :rtype: str
 
     """
-    pyesdoc.authenticate_user(credentials)
+    security.authenticate_user(credentials)
 
 
 def authorize(user_id):
@@ -58,7 +57,7 @@ def authorize(user_id):
 
     """
     logger.log_web('Authorizing: {} --> {}'.format(user_id, _GH_TEAM))
-    pyesdoc.authorize_user(_GH_TEAM, user_id)
+    security.authorize_user(_GH_TEAM, user_id)
 
 
 def secure_request(handler):
@@ -71,8 +70,11 @@ def secure_request(handler):
     if handler.request.path in _WHITELISTED_ENDPOINTS:
         return
 
-    # Strip credentials.
-    credentials = pyesdoc.strip_credentials(handler.request.headers['Authorization'])
+    # Set credentials - either from web-form or cli client.
+    credentials = handler.request.headers['Authorization']
+
+    # Strip credentials - i.e. destructure from b64 --> 2 member tuple.
+    credentials = security.strip_credentials(credentials)
 
     # Authenticate.
     if config.apply_security_policy:

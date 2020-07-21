@@ -9,14 +9,14 @@
 
 
 """
-import arrow
+import datetime as dt
 
 
 
 # Set of logging levels.
 LOG_LEVEL_DEBUG = 'DUBUG'
 LOG_LEVEL_INFO = 'INFO'
-LOG_LEVEL_WARNING = 'WARNING'
+LOG_LEVEL_WARNING = 'WARN'
 LOG_LEVEL_ERROR = 'ERROR'
 LOG_LEVEL_CRITICAL = 'CRITICAL'
 LOG_LEVEL_FATAL = 'FATAL'
@@ -36,11 +36,11 @@ def _get_formatted_message(msg, module, level):
     if msg is None:
         return _NULL_MSG
 
-    return "{} [{}] :: ESDOC-{} :: {}".format(
-        unicode(arrow.get())[0:-6],
+    return "{} [{}] :: CDF2CIM-{} :: {}".format(
+        str(dt.datetime.utcnow())[0:-7],
         level,
         module,
-        unicode(msg).strip()
+        str(msg).strip()
         )
 
 
@@ -97,7 +97,7 @@ def log_db(msg, level=LOG_LEVEL_INFO):
     :param str level: Message level (e.g. INFO).
 
     """
-    log(msg, "CDF2CIM-DB", level)
+    log(msg, "DB", level)
 
 
 def log_db_warning(msg):
@@ -116,7 +116,36 @@ def log_db_error(err):
     :param Exception err: Exception to be logged.
 
     """
-    log_error(err, "CDF2CIM-DB")
+    log_error(err, "DB")
+
+
+def log_pid(msg, level=LOG_LEVEL_INFO):
+    """Logs PID service related events.
+
+    :param str msg: PID service message for writing to log.
+    :param str level: Message level (e.g. INFO).
+
+    """
+    log(msg, "PID", level)
+
+
+def log_pid_warning(msg):
+    """Logs a PID service warning event.
+
+    :param str msg: A log message.
+    :param str level: Message level (e.g. INFO).
+
+    """
+    log_pid(msg, level=LOG_LEVEL_WARNING)
+
+
+def log_pid_error(err):
+    """Logs a PID service error event.
+
+    :param Exception err: Exception to be logged.
+
+    """
+    log_error(err, "PID")
 
 
 def log_web(msg, level=LOG_LEVEL_INFO):
@@ -126,7 +155,7 @@ def log_web(msg, level=LOG_LEVEL_INFO):
     :param str level: Message level (e.g. INFO).
 
     """
-    log(msg, "CDF2CIM-WS", level)
+    log(msg, "WS", level)
 
 
 def log_web_warning(msg):
@@ -153,4 +182,4 @@ def log_web_error(err):
     :param Exception err: Exception to be logged.
 
     """
-    log_error(err, "CDF2CIM-WS")
+    log_error(err, "WS")

@@ -29,19 +29,20 @@ _install_config()
 
 _install_venv()
 {
-    log "installing virtual environment ..."
-
 	pushd $CDF2CIM_WS_HOME
+
+    log "installing virtual environment ..."
 
     # Update pip / pipenv to latest versions.
     pip3 install --upgrade pip
     pip3 install --upgrade pipenv
 
 	# Install venv using pipenv.
-	pushd $CDF2CIM_WS_HOME
 	pipenv install 
 
 	log "virtual environment installed"
+
+	popd
 }
 
 # Invoke entry point.

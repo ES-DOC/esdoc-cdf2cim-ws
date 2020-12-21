@@ -5,13 +5,11 @@ source $CDF2CIM_WS_HOME/sh/utils.sh
 
 _update_src()
 {
-    pushd $CDF2CIM_WS_HOME
 	git pull
 }
 
 _update_venv()
 {
-    pushd $CDF2CIM_WS_HOME
     pipenv install -r $CDF2CIM_WS_HOME/requirements.txt
 }
 
@@ -20,8 +18,10 @@ main()
 {
     log "update starts ..."
 
+    pushd $CDF2CIM_WS_HOME
     _update_src
     _update_venv
+    popd
 
     log "update complete"
 }

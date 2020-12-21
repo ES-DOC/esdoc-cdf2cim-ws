@@ -10,6 +10,7 @@ main()
 
     pushd $CDF2CIM_WS_HOME
 	pipenv run python $CDF2CIM_WS_HOME/sh/app_run.py
+    popd
 }
 
 # Invoke entry point.

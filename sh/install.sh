@@ -34,8 +34,8 @@ _install_venv()
 	pushd $CDF2CIM_WS_HOME
 
     # Update pip / pipenv to latest versions.
-    pip2 install --upgrade pip
-    pip2 install --upgrade pipenv
+    pip3 install --upgrade pip
+    pip3 install --upgrade pipenv
 
 	# Install venv using pipenv.
 	pushd $CDF2CIM_WS_HOME

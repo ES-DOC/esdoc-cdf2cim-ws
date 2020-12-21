@@ -31,13 +31,15 @@ _install_venv()
 {
     log "installing virtual environment ..."
 
+	pushd $CDF2CIM_WS_HOME
+
     # Update pip / pipenv to latest versions.
     pip2 install --upgrade pip
     pip2 install --upgrade pipenv
 
 	# Install venv using pipenv.
 	pushd $CDF2CIM_WS_HOME
-	pipenv install
+	pipenv install 
 
 	log "virtual environment installed"
 }
